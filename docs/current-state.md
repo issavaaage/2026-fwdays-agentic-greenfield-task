@@ -1,6 +1,6 @@
 # Current state
 
-**Last action:** 2026-06-27T23:30:00Z
+**Last action:** 2026-06-27T23:55:00Z
 
 ## What was done
 
@@ -47,22 +47,31 @@
 - `src/lib/i18n/en.ts` extended — stat labels, generation names, detail strings
 - Archived: `openspec/changes/archive/2026-06-27-pokemon-detail/`
 
-### Search capability (COMPLETE, PENDING ARCHIVE)
+### Search capability (COMPLETE, ARCHIVED)
 - `src/lib/search.ts` — pure `filterByName(list, query)` helper (TC-PURE-01 compliant)
 - `src/lib/i18n/en.ts` extended — `search.placeholder`, `search.label`, `search.noResults.*`
 - `src/components/features/SearchBar.tsx` — `"use client"` component with 300 ms debounce, `useRouter` URL push, `initialValue` prop
 - `app/pokemon/page.tsx` updated — accepts `searchParams` Promise, filters list, renders SearchBar above grid, context-aware empty state
 
+### Filters capability (COMPLETE, PENDING ARCHIVE)
+- `src/lib/pokemon.ts` extended — `PokemonIndexEntry` type, `fetchPokemonIndex()` (batched fetch of all 1025 Pokémon + species, `revalidate: 86400`)
+- `src/lib/filters.ts` — pure `filterByType`, `filterByGeneration`, `filterByLegendary` helpers (TC-PURE-01 compliant)
+- `src/lib/search.ts` updated — `filterByName` now generic `<T extends { name: string }>` (full-index compatible)
+- `src/lib/i18n/en.ts` extended — `filters.*` strings (type heading, gen options, legendary label, clear button)
+- `app/api/pokemon-index/route.ts` — Route Handler serving the full Pokémon index with `revalidate: 86400`
+- `src/components/features/FilterBar.tsx` — `"use client"` component: 18 type badges (TypeBadge selectable), generation Select (Gen 1–9), legendary Switch, "Clear filters" ghost Button
+- `app/pokemon/page.tsx` updated — fetches full index, applies filter pipeline (name → type → generation → legendary), slices 20 for current page, passes initial props to FilterBar and SearchBar
+
 ## Current state
 
-- Full browse → search → click → read → back loop working
-- `/pokemon` → 20-card grid with search input; filtering works in real time
-- `?search=<term>` persisted in URL; shareable and bookmarkable
-- Clearing search restores full list, removes `?search=` param
-- No-results empty state distinguishes search misses from load errors
-- `/pokemon/[id]` → full detail page unchanged
+- Full browse → filter → search → click → read → back loop working
+- `/pokemon` → 20-card grid with type multi-select, generation select, legendary toggle, and search
+- All filters reflected in URL params (`?type=fire,water&gen=1&legendary=1&search=mewtwo`); shareable and bookmarkable
+- Filter controls pre-populated on page reload from URL params
+- Search now covers all 1025 Pokémon (was limited to 20); searching "mewtwo" returns Mewtwo #150
+- "Clear filters" removes all params and resets search input; button hidden when no filters active
 - `tsc --noEmit` and `npm run build` pass clean
-- Search is scoped to the fetched 20-item page (Pokémon #1–20); broader search across all 1025 is deferred to capability 6 (pagination)
+- Build shows `/api/pokemon-index` with `Revalidate: 1d`
 
 ## Known issues
 
@@ -70,6 +79,6 @@ None.
 
 ## Suggested next steps
 
-1. Archive search change: `/opsx:archive`
+1. Archive filters change: `/opsx:archive`
 2. Commit
-3. Propose and implement capability 5 — filters (FR-FILTER-01..05)
+3. Propose and implement capability 6 — pagination (FR-PAGE-01..02)

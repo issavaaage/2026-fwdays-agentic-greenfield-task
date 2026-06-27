@@ -1,9 +1,7 @@
-import type { PokemonListItem } from "./pokemon";
-
-export function filterByName(
-  list: PokemonListItem[],
+export function filterByName<T extends { name: string }>(
+  list: T[],
   query: string
-): PokemonListItem[] {
+): T[] {
   const q = query.trim().toLowerCase();
   if (!q) return list;
   return list.filter((p) => p.name.toLowerCase().includes(q));

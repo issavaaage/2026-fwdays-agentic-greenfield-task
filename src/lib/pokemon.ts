@@ -1,5 +1,17 @@
 const BASE = "https://pokeapi.co/api/v2";
 
+const GENERATION_NUMBER: Record<string, number> = {
+  "generation-i": 1,
+  "generation-ii": 2,
+  "generation-iii": 3,
+  "generation-iv": 4,
+  "generation-v": 5,
+  "generation-vi": 6,
+  "generation-vii": 7,
+  "generation-viii": 8,
+  "generation-ix": 9,
+};
+
 interface ListEntry {
   name: string;
   url: string;
@@ -35,6 +47,15 @@ export interface PokemonListItem {
   id: number;
   name: string;
   types: string[];
+}
+
+export interface PokemonIndexEntry {
+  id: number;
+  name: string;
+  types: string[];
+  generation: number;
+  isLegendary: boolean;
+  isMythical: boolean;
 }
 
 export interface PokemonDetail {
@@ -138,4 +159,42 @@ export async function fetchPokemonSpecies(
 function idFromUrl(url: string): number {
   const parts = url.replace(/\/$/, "").split("/");
   return Number(parts[parts.length - 1]);
+}
+
+async function fetchIndexEntry(
+  id: number
+): Promise<PokemonIndexEntry | null> {
+  const [pokemonRes, speciesRes] = await Promise.all([
+    fetch(`${BASE}/pokemon/${id}`, { next: { revalidate: 86400 } }),
+    fetch(`${BASE}/pokemon-species/${id}`, { next: { revalidate: 86400 } }),
+  ]);
+  if (!pokemonRes.ok || !speciesRes.ok) return null;
+  const [pokemonData, speciesData]: [PokéAPIPokemon, PokéAPISpecies] =
+    await Promise.all([pokemonRes.json(), speciesRes.json()]);
+  return {
+    id: pokemonData.id,
+    name: pokemonData.name,
+    types: pokemonData.types.map((t) => t.type.name),
+    generation: GENERATION_NUMBER[speciesData.generation.name] ?? 0,
+    isLegendary: speciesData.is_legendary,
+    isMythical: speciesData.is_mythical,
+  };
+}
+
+export async function fetchPokemonIndex(): Promise<PokemonIndexEntry[]> {
+  const res = await fetch(`${BASE}/pokemon?limit=1025&offset=0`, {
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) return [];
+  const data: PokéAPIListResponse = await res.json();
+  const ids = data.results.map((e) => idFromUrl(e.url));
+
+  const results: PokemonIndexEntry[] = [];
+  const BATCH = 50;
+  for (let i = 0; i < ids.length; i += BATCH) {
+    const batch = ids.slice(i, i + BATCH);
+    const entries = await Promise.all(batch.map(fetchIndexEntry));
+    results.push(...entries.filter((e): e is PokemonIndexEntry => e !== null));
+  }
+  return results;
 }

@@ -1,10 +1,4 @@
-# Spec: Search
-
-## Purpose
-
-Defines the requirements for the Pokémon name search feature on `/pokemon`, including real-time filtering, debounce behavior, and URL persistence of the active search term.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Name search input filters the Pokémon list
 The app SHALL display a search input above the Pokémon grid on `/pokemon`. As the user types, the list SHALL filter in real time to show only Pokémon whose names contain the search term (case-insensitive). The filter SHALL be applied after a 300 ms debounce. Search SHALL run against the full Pokémon index (all 1025 Pokémon), not only the currently-displayed page.
