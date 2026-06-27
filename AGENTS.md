@@ -14,8 +14,18 @@ Maintain `docs/current-state.md` throughout your work. Before finishing any sess
 Create the file if it does not exist. Never delete it.
 <!-- END:current-state-rules -->
 
-#UPDATE WITH AI
-This project uses openspec, please use it to execute all changes
+<!-- BEGIN:openspec-rules -->
+# All changes go through OpenSpec
+
+This project uses the OpenSpec workflow. Every change — new feature, bugfix, or refactor — must follow the propose → apply → archive cycle using the available OpenSpec skills:
+
+- **Explore** (`openspec-explore`): think through the problem before proposing
+- **Propose** (`openspec-propose`): create a change with design, specs, and tasks
+- **Apply** (`openspec-apply-change`): implement tasks from an approved proposal
+- **Archive** (`openspec-archive-change`): close out a completed change
+
+Do not make ad-hoc edits outside of an active OpenSpec change.
+<!-- END:openspec-rules -->
 
 <!-- BEGIN:frontend-skill-ref -->
 # Frontend work

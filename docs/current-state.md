@@ -1,6 +1,6 @@
 # Current state
 
-**Last action:** 2026-06-27T21:00:00Z
+**Last action:** 2026-06-27T22:00:00Z
 
 ## What was done
 
@@ -34,20 +34,27 @@
 - Delta spec synced to `openspec/specs/app-shell/spec.md`
 - Archived: `openspec/changes/archive/2026-06-27-shell/`
 
-### Pokemon-list capability (COMPLETE, PENDING ARCHIVE)
-- `src/lib/pokemon.ts` — `fetchPokemonList`, `fetchPokemon` with 24 h revalidation
-- `src/lib/i18n/en.ts` — empty state UI strings
-- `app/pokemon/page.tsx` — Server Component, 20-card responsive grid
-- `app/page.tsx` — redirects to `/pokemon` (307)
+### Pokemon-list capability (COMPLETE, ARCHIVED)
+- `src/lib/pokemon.ts` — `fetchPokemonList`, `fetchPokemon`
+- `src/lib/i18n/en.ts` — empty state strings
+- `app/pokemon/page.tsx` — 20-card responsive grid
+- `app/page.tsx` → redirect to `/pokemon`
+- Archived: `openspec/changes/archive/2026-06-27-pokemon-list/`
+
+### Pokemon-detail capability (COMPLETE, PENDING ARCHIVE)
+- `app/pokemon/[id]/page.tsx` — full profile: artwork, dex#, name, genus, types, flavor, stats, abilities, height/weight, generation, legendary badge, back link
+- `src/lib/pokemon.ts` extended — `fetchPokemonDetail`, `fetchPokemonSpecies`
+- `src/lib/i18n/en.ts` extended — stat labels, generation names, detail strings
 
 ## Current state
 
-- App shell live: sticky TopBar, Footer, DS tokens
-- `/pokemon` renders 20 Pokémon cards (official sprite, `#NNNN` dex, name, type badges)
-- Root `/` redirects to `/pokemon`
-- All fetching server-side; `/pokemon` builds with `Revalidate: 1d`
-- Cards link to `/pokemon/[id]` — detail page not yet implemented
+- Full browse → click → read → back loop working
+- `/pokemon` → 20-card grid, each card links to `/pokemon/[id]`
+- `/pokemon/[id]` → full detail page (two parallel PokéAPI fetches, Server Component)
+- Invalid IDs return 404 via `notFound()`
+- Legendary/Mythical badge shown conditionally
 - `tsc --noEmit` and `npm run build` pass clean
+- Back link is `/pokemon` (URL param preservation pending caps 4–6)
 
 ## Known issues
 
@@ -55,6 +62,6 @@ None.
 
 ## Suggested next steps
 
-1. Archive pokemon-list: `/opsx:archive`
+1. Archive pokemon-detail: `/opsx:archive`
 2. Commit
-3. Propose and implement capability 3 — pokemon-detail
+3. Propose and implement capability 4 — search
