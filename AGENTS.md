@@ -1,9 +1,23 @@
-<!-- BEGIN:design-system-rules -->
-# Design system
-Read `DESIGN.md` before writing any UI code — it is the brand contract.
-All DS components live in `src/components/ds/`; import from `@/components/ds`.
-No raw hex colors or px values in source — use DS tokens via `var()`.
-<!-- END:design-system-rules -->
+<!-- BEGIN:product-docs-rules -->
+# Product documentation
+Read `docs/product-brief.md` and `docs/requirements.md` before starting any work. The requirements doc is the source of truth for requirement IDs (FR-*, NFR-*, TC-*, BC-*); reference them in commits and PRs.
+<!-- END:product-docs-rules -->
+
+<!-- BEGIN:current-state-rules -->
+# Current state tracking
+Maintain `docs/current-state.md` throughout your work. Before finishing any session, update it with:
+- What was done (summary of changes, files touched)
+- Timestamp of last action (ISO 8601, e.g. `2026-06-27T15:00:00Z`)
+- Current state of the codebase (what works, what is incomplete, known issues)
+- Suggested next steps
+
+Create the file if it does not exist. Never delete it.
+<!-- END:current-state-rules -->
+
+<!-- BEGIN:frontend-skill-ref -->
+# Frontend work
+Use the `frontend-design-skill` skill (`.agents/skills/frontend-design-skill/`) before writing any UI code, components, or styles.
+<!-- END:frontend-skill-ref -->
 
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
