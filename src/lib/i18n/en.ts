@@ -36,6 +36,11 @@ export const strings = {
       description: "Try a different name or clear the filters.",
     },
   },
+  pagination: {
+    previous: "Previous page",
+    next: "Next page",
+    page: "Page",
+  },
   filters: {
     typeHeading: "Type",
     genLabel: "Generation",

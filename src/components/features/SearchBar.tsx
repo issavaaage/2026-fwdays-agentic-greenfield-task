@@ -17,6 +17,7 @@ export function SearchBar({ initialValue = "" }: SearchBarProps) {
 
   function pushSearch(term: string) {
     const params = new URLSearchParams(window.location.search);
+    params.delete("page");
     if (term) {
       params.set("search", term);
     } else {

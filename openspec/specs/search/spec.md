@@ -26,7 +26,7 @@ The app SHALL display a search input above the Pokémon grid on `/pokemon`. As t
 - **THEN** all Pokémon (subject to any active type/generation/legendary filters) are shown and the `?search=` param is removed from the URL
 
 ### Requirement: Active search term is persisted in the URL
-The active search term SHALL be reflected in the URL as `?search=<term>`. A URL containing `?search=<term>` SHALL pre-populate the search input and render the filtered list on page load.
+The active search term SHALL be reflected in the URL as `?search=<term>`. A URL containing `?search=<term>` SHALL pre-populate the search input and render the filtered list on page load. When the search term changes, the `?page=` param SHALL be reset to 1 in the same URL push so the visitor always lands on the first page of new results.
 
 #### Scenario: URL updates as user types
 - **WHEN** the user types into the search input
@@ -39,3 +39,7 @@ The active search term SHALL be reflected in the URL as `?search=<term>`. A URL 
 #### Scenario: Empty search removes the param
 - **WHEN** the search input is empty
 - **THEN** the URL does not contain a `?search=` parameter
+
+#### Scenario: Search change resets page to 1
+- **WHEN** the user types a new search term while on page 3
+- **THEN** the URL is updated with `?search=<term>` and `page=1` (or no `?page=` param), and the first page of matching results is shown
