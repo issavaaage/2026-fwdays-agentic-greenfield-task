@@ -1,26 +1,25 @@
 # Current state
 
-**Last action:** 2026-06-27T12:00:00Z
+**Last action:** 2026-06-27T14:00:00Z
 
 ## What was done
 
-### Pagination capability (COMPLETE, ARCHIVED)
+### Build-time Pokémon index (COMPLETE, ARCHIVED)
 
-- `src/lib/paginate.ts` — pure `paginate<T>(list, page, pageSize): { items, totalPages }` helper (TC-PURE-01)
-- `src/lib/i18n/en.ts` extended — `pagination` key with previous/next/page aria labels
-- `src/components/features/Pagination.tsx` — `"use client"` wrapper; reads `?page=` via `useSearchParams`, writes via `useRouter`, delegates rendering to DS `Pagination`
-- `src/components/features/SearchBar.tsx` updated — `pushSearch` now deletes `?page=` before pushing (resets to page 1 on search change)
-- `app/pokemon/page.tsx` updated — reads `page` from `searchParams`, calls `paginate()` for the 20-item slice and `totalPages`, renders `<Pagination>` below grid when `totalPages > 1`, redirects out-of-range pages to last valid page
-- `src/components/features/FilterBar.tsx` — already had `params.delete("page")` in `pushParams`; no change needed
-- `openspec/changes/archive/2026-06-27-pagination/` — archived
-- `openspec/specs/pagination/spec.md` — new main spec (3 requirements, 13 scenarios)
-- `openspec/specs/pokemon-list/spec.md` updated — page-slice and redirect scenarios added
-- `openspec/specs/filters/spec.md` updated — page-reset-on-filter scenario added
-- `openspec/specs/search/spec.md` updated — page-reset-on-search scenario added
+- `scripts/generate-pokemon-index.mjs` — plain ESM build script; fetches all 1025 Pokémon from PokéAPI in batches of 50, writes `src/data/pokemon-index.json`; exits with code 1 on failure
+- `src/data/pokemon-index.d.ts` — TypeScript declaration for the generated JSON module
+- `src/data/pokemon-index.json` — generated at build time, gitignored
+- `.gitignore` updated — `src/data/pokemon-index.json` excluded
+- `package.json` updated — `"generate"` script added; `"build"` now runs generation before `next build`
+- `app/pokemon/page.tsx` updated — replaced `fetchPokemonIndex()` with `import pokemonIndex from '@/data/pokemon-index.json'`
+- `app/api/pokemon-index/route.ts` deleted — no longer needed
+- `src/lib/pokemon.ts` cleaned — `fetchPokemonIndex`, `fetchIndexEntry`, `GENERATION_NUMBER` removed
+- `openspec/specs/pokemon-list/spec.md` updated — "Data is fetched server-side only" requirement updated to reflect build-time generation
+- `openspec/changes/archive/2026-06-27-build-time-pokemon-index/` — archived
 
 ## Current state
 
-All 6 capabilities shipped:
+All 6 capabilities shipped + performance optimisation:
 
 | Capability | Status |
 |---|---|
@@ -30,13 +29,13 @@ All 6 capabilities shipped:
 | Search | ✅ Complete |
 | Filters | ✅ Complete |
 | Pagination | ✅ Complete |
+| Build-time index (perf) | ✅ Complete |
 
-- Full browse → filter → search → paginate → click → read → back loop working
-- `/pokemon` — 20-card grid with type multi-select, generation select, legendary toggle, search, and pagination controls (52 pages for full index)
-- All state reflected in URL params (`?type=fire&gen=1&legendary=1&search=mewtwo&page=2`); shareable and bookmarkable
-- Changing any filter or search resets `?page=` to 1
-- Out-of-range page numbers redirect to the last valid page
+- Zero runtime PokéAPI calls for the list page — index imported as static JSON
+- Detail page (`/pokemon/[id]`) still fetches at runtime (cached with `revalidate: 86400`)
+- `npm run generate` regenerates the index; `npm run build` always regenerates before compiling
 - `tsc --noEmit` and `npm run build` pass clean
+- Verified: 0 PokéAPI browser calls on list page, all filters and pagination working
 
 ## Known issues
 
@@ -44,7 +43,7 @@ None.
 
 ## Suggested next steps
 
-All MVP capabilities are complete. Consider:
-1. Addressing non-functional requirements (NFR-*): TTFB, JS payload size, a11y audit
-2. Business constraints check (BC-BRAND-02): verify PokéAPI footer credit is present
-3. Final QA pass across all capabilities
+1. Address non-functional requirements (NFR-*): TTFB audit, JS payload size check
+2. Accessibility audit (NFR-A11Y-01, NFR-A11Y-02)
+3. Verify PokéAPI footer credit (BC-BRAND-02)
+4. Final QA pass across all capabilities

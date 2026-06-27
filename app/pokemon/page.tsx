@@ -4,7 +4,8 @@ import type { PokemonType } from "@/components/ds";
 import { SearchBar } from "@/components/features/SearchBar";
 import { FilterBar } from "@/components/features/FilterBar";
 import { Pagination } from "@/components/features/Pagination";
-import { fetchPokemonIndex } from "@/lib/pokemon";
+import pokemonIndex from "@/data/pokemon-index.json";
+import type { PokemonIndexEntry } from "@/lib/pokemon";
 import { filterByName } from "@/lib/search";
 import { filterByType, filterByGeneration, filterByLegendary } from "@/lib/filters";
 import { paginate } from "@/lib/paginate";
@@ -32,7 +33,7 @@ export default async function PokemonListPage({ searchParams }: PageProps) {
   const rawPage = params.page ? parseInt(params.page, 10) : 1;
   const requestedPage = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
 
-  const allPokemon = await fetchPokemonIndex();
+  const allPokemon = pokemonIndex as PokemonIndexEntry[];
 
   let filtered = filterByName(allPokemon, search);
   filtered = filterByType(filtered, selectedTypes);
