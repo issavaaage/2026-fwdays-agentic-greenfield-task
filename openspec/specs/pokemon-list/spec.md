@@ -36,11 +36,15 @@ Each Pokémon card SHALL be a navigable link to `/pokemon/[id]`.
 - **THEN** the browser navigates to `/pokemon/[id]` where `[id]` is the Pokémon's numeric dex id
 
 ### Requirement: Empty state is shown when no Pokémon are available
-When the list has no items to display, the page SHALL render an empty state with a descriptive message instead of an empty grid.
+When the list has no items to display, the page SHALL render an empty state with a descriptive message instead of an empty grid. When the empty state is caused by an active search term, the message SHALL indicate that no Pokémon match the current search, distinct from a data-load failure message.
 
-#### Scenario: Empty state renders on zero results
-- **WHEN** the fetched Pokémon list is empty
-- **THEN** the `EmptyState` component is shown with a title and description
+#### Scenario: Empty state renders on zero results from failed fetch
+- **WHEN** the fetched Pokémon list is empty due to a data-load error
+- **THEN** the `EmptyState` component is shown with a title and description indicating a load failure
+
+#### Scenario: Empty state renders on zero search results
+- **WHEN** the active search term matches no Pokémon in the fetched list
+- **THEN** the `EmptyState` component is shown with a message indicating no Pokémon match the search term
 
 ### Requirement: Data is fetched server-side only
 All PokéAPI requests SHALL be made in Server Components or Route Handlers. PokéAPI URLs SHALL NOT appear in the client-side JavaScript bundle.

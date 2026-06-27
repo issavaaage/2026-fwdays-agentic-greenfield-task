@@ -28,4 +28,12 @@ export const strings = {
     hiddenAbility: "Hidden",
     backLink: "Back to results",
   },
+  search: {
+    placeholder: "Search Pokémon…",
+    label: "Search Pokémon",
+    noResults: {
+      title: "No Pokémon match your search",
+      description: "Try a different name or clear the search.",
+    },
+  },
 } as const;
