@@ -14,6 +14,9 @@ Maintain `docs/current-state.md` throughout your work. Before finishing any sess
 Create the file if it does not exist. Never delete it.
 <!-- END:current-state-rules -->
 
+#UPDATE WITH AI
+This project uses openspec, please use it to execute all changes
+
 <!-- BEGIN:frontend-skill-ref -->
 # Frontend work
 Use the `frontend-design-skill` skill (`.agents/skills/frontend-design-skill/`) before writing any UI code, components, or styles.
