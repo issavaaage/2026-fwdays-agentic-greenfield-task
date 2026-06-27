@@ -24,6 +24,8 @@ This project uses the OpenSpec workflow. Every change — new feature, bugfix, o
 - **Apply** (`openspec-apply-change`): implement tasks from an approved proposal
 - **Archive** (`openspec-archive-change`): close out a completed change
 
+After every `/opsx:archive`, stage all changed files and create a git commit before starting the next capability.
+
 Do not make ad-hoc edits outside of an active OpenSpec change.
 <!-- END:openspec-rules -->
 
